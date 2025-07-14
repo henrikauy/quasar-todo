@@ -1,6 +1,12 @@
 <template>
-  <q-page>
-    <TodoList :entries="entries" />
+  <q-page class="column q-pa-md">
+    <div class="col">
+      <TodoList :entries="entries" />
+    </div>
+
+    <div>
+      <TodoListEntry @add="handleAddEntry" />
+    </div>
   </q-page>
 </template>
 
@@ -9,6 +15,7 @@
   import { ref } from 'vue'
   import TodoList from 'components/TodoList.vue'
   import type { Entry } from 'components/TodoList.vue'
+  import TodoListEntry from 'components/TodoListEntry.vue'
 
   const entries = ref<Entry[]>([
     {
@@ -36,5 +43,10 @@
       category: 'exercise'
     }
   ])
+
+  const handleAddEntry = (newEntry: Entry) => {
+    entries.value.push(newEntry)
+  };
+
 
 </script>
