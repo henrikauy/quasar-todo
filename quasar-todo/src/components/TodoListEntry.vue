@@ -1,45 +1,62 @@
 <template>
-  <q-form @submit.prevent="handleSubmit">
-    <div class="col q-gutter-y-sm">
-      <q-input square outlined v-model="form.name" label="Todo item" />
-      <q-input square outlined v-model="form.description" label="Description" />
-      <q-input square outlined v-model="form.category" label="Category" />
-    </div>
+  <q-card square bordered class="q-pa-md" style="max-width: 800px; margin: 0 auto;">
+    <!-- Form for creating a new todo entry -->
+    <q-form @submit.prevent="handleSubmit">
+      <div class="col q-gutter-y-sm">
+        <!-- Input task name -->
+        <q-input square
+                 dense
+                 outlined
+                 v-model="form.name"
+                 placeholder="Todo Item" />
 
-    <div class="row justify-end q-mt-sm">
-      <q-btn label="Submit" type="submit" color="primary" />
-    </div>
-  </q-form>
+        <!-- Input category -->
+        <q-input square
+                 dense
+                 outlined
+                 v-model="form.category"
+                 placeholder="Category" />
+      </div>
 
+      <!-- Submit Button -->
+      <div class="row justify-end q-mt-sm">
+        <q-btn label="Submit" type="submit" color="primary" />
+      </div>
+    </q-form>
+  </q-card>
 </template>
 
 <script setup lang="ts">
   import { ref } from 'vue'
   import type { Entry } from './TodoList.vue'
 
-  const emit = defineEmits<{ (e: 'add', newEntry: Entry): void; }>()
+  // Define emit new entry event
+  const emit = defineEmits<{ (e: 'add', newEntry: Entry): void }>()
 
+  // Form state for new entry
   const form = ref({
     name: '',
-    description: '',
-    category: ''
-  });
+    category: '',
+  })
 
+  // Handle form submission
   const handleSubmit = () => {
-    if (!form.value.name || !form.value.description) return;
+    // Return if form is empty
+    if (!form.value.name) return
 
+    // Create new Entry object
     const newEntry: Entry = {
       id: `id-${Date.now()}`,
       name: form.value.name,
-      description: form.value.description,
-      category: form.value.category as Entry['category']
-    };
+      category: form.value.category as Entry['category'],
+      completed: false
+    }
 
-    emit('add', newEntry);
+    // Emit to parent
+    emit('add', newEntry)
 
-    form.value.name = '';
-    form.value.description = '';
-    form.value.category = '';
-
-  };
+    // Reset form
+    form.value.name = ''
+    form.value.category = ''
+  }
 </script>

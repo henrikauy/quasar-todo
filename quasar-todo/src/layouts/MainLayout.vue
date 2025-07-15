@@ -12,7 +12,7 @@
         <q-toolbar-title>
           <div class="flex flex-center">
             <q-icon name="pending_actions" />
-            Quasar App
+            ToDo List
           </div>
         </q-toolbar-title>
 
