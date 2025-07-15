@@ -81,4 +81,6 @@
       entries.value.splice(index, 1)
     }
   }
+
+
 </script>
