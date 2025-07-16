@@ -26,38 +26,22 @@
 
 <script setup lang="ts">
   // Imports
-  import { ref, computed } from 'vue'
+  import { ref, computed, watch } from 'vue'
   import TodoList from 'components/TodoList.vue'
   import type { Entry } from 'components/TodoList.vue'
   import TodoListEntry from 'components/TodoListEntry.vue'
+  import { useQuasar } from 'quasar'
 
-  // List of all entries
-  const entries = ref<Entry[]>([
-    {
-      id: 'id1',
-      name: 'Wash the dishes.',
-      category: 'chores',
-      completed: true
-    },
-    {
-      id: 'id2',
-      name: 'eat an apple today!',
-      category: null,
-      completed: false
-    },
-    {
-      id: 'id3',
-      name: 'Gym sesh',
-      category: 'exercise',
-      completed: false
-    },
-    {
-      id: 'id4',
-      name: 'finish todo app',
-      category: 'work',
-      completed: false
-    }
-  ])
+  const $q = useQuasar()
+
+  // Create entries ref
+  const entries = ref<Entry[]>([])
+
+  // Populate entries with whats saved in local storage
+  const savedEntries = $q.localStorage.getItem<Entry[]>('todos')
+  if (savedEntries) {
+    entries.value = savedEntries
+  }
 
   // Computed list of entries that are not completed
   const incompletedEntries = computed(() =>
@@ -76,11 +60,18 @@
 
   // Handle entry deletion
   const handleDeleteEntry = (entry: Entry) => {
-    const index = entries.value.findIndex(e => e.id === entry.id)
+    const index = entries.value.findIndex(currentEntry => currentEntry.id === entry.id)
     if (index !== -1) {
       entries.value.splice(index, 1)
     }
   }
 
+  // Watch the state of entries - on change update the local storage to current state.
+  watch(entries, (newEntries: Entry[]) => {
+    $q.localStorage.set('todos', newEntries)
+    console.log("entry added")
+  },
+    { deep: true }
+  )
 
 </script>

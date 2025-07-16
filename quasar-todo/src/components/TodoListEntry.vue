@@ -44,6 +44,17 @@
     // Return if form is empty
     if (!form.value.name) return
 
+    // Default to misc - temporary. need to add dropdown box.~~~~~~~~~~~~~~~~~~~
+    if (!form.value.category ||
+      (
+        form.value.category !== 'work' &&
+        form.value.category !== 'exercise' &&
+        form.value.category !== 'chores'
+      )
+    ) {
+      form.value.category = 'misc';
+    }
+
     // Create new Entry object
     const newEntry: Entry = {
       id: `id-${Date.now()}`,

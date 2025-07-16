@@ -17,7 +17,7 @@
         <!-- Entry name and category -->
         <q-item-section>
           <q-item-label>{{ entry.name }}</q-item-label>
-          <q-item-label caption lines="2">{{ entry.category ?? 'misc' }}</q-item-label>
+          <q-item-label caption lines="2">{{ entry.category }}</q-item-label>
         </q-item-section>
 
         <!-- Delete button -->
@@ -39,15 +39,17 @@
   export type Entry = {
     id: string;
     name: string;
-    category: 'chores' | 'work' | 'exercise' | null;
+    category: 'chores' | 'work' | 'exercise' | 'misc';
     completed: boolean;
   }
 
-  // Props: list of entries to render
+  // Props to pass to parent: list of entries to render
   defineProps<{ entries: Entry[] }>()
 
   // Define delete emit event
-  const emit = defineEmits<{ (e: 'delete', entry: Entry): void }>()
+  const emit = defineEmits<{
+    (e: 'delete', entry: Entry): void
+  }>()
 
   // Emit delete event to parent
   const deleteEntry = (entry: Entry) => {
