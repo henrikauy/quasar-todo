@@ -4,16 +4,19 @@ using backend_todo.Models;
 
 namespace backend_todo.Data
 {
-    class TodoContext : DbContext
+    public class TodoContext : DbContext
     {
+        // Constructor
         public TodoContext(DbContextOptions<TodoContext> options)
             : base(options)
         {
         }
 
+        // Map properties to database tables
         public DbSet<Todo> Todos { get; set; }
         public DbSet<Category> Categories { get; set; }
 
+        // Seed data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Todo>();
@@ -25,10 +28,6 @@ namespace backend_todo.Data
             );
         }
 
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            optionsBuilder.UseSqlServer("Server=(localdb)\\mssqllocaldb;Database=MyDatabase;Trusted_Connection=True;");
-        }
     }
 
 }

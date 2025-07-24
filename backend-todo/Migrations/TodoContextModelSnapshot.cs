@@ -78,6 +78,9 @@ namespace backend_todo.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("Secret")
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("TodoId");
 
                     b.HasIndex("CategoryId");

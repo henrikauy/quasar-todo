@@ -10,8 +10,9 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+// Register database context to the builder
 builder.Services.AddDbContext<TodoContext>(options =>
-    options.UseSqlServer("Server=(localdb)\\mssqllocaldb;Database=MyDatabase;Trusted_Connection=True;"));
+    options.UseSqlServer("Server=HENRIK-PC\\MSSQLSERVER01;Database=TodoDb;Trusted_Connection=True;Encrypt=False"));
 
 var app = builder.Build();
 

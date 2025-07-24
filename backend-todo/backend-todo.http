@@ -1,6 +1,14 @@
 @backend_todo_HostAddress = http://localhost:5126
 
-GET {{backend_todo_HostAddress}}/weatherforecast/
-Accept: application/json
+
+POST {{backend_todo_HostAddress}}/api/todos
+Content-Type: application/json
+
+{
+  "name": "walk dog",
+  "isComplete": false,
+  "categoryId": 2
+}
 
 ###
+
