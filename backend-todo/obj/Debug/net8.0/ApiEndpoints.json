@@ -1,6 +1,32 @@
 [
   {
     "ContainingType": "backend_todo.Controllers.CategoriesController",
+    "Method": "GetCategoryByName",
+    "RelativePath": "{name}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "name",
+        "Type": "System.String",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "backend_todo.Models.Category",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "backend_todo.Controllers.CategoriesController",
     "Method": "GetCategories",
     "RelativePath": "api/Categories",
     "HttpMethod": "GET",

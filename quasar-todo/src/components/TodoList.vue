@@ -55,9 +55,10 @@
     categories: Category[]
   }>()
 
-  // Define delete emit event
+  // Define emit events
   const emit = defineEmits<{
-    (e: 'delete', entry: Entry): void
+    (e: 'delete', entry: Entry): void,
+    (e: 'completeToggle', entry: Entry): void
   }>()
 
   // Emit delete event to parent
@@ -67,7 +68,7 @@
 
   // Toggle completed status
   const toggleComplete = (entry: Entry) => {
-    entry.completed = !entry.completed
+    emit('completeToggle', entry)
   }
 
   // Get category name from id

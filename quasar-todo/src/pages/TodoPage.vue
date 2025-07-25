@@ -7,7 +7,8 @@
         <div class="text-subtitle1">To Do</div>
         <TodoList :categories="categories"
                   :entries="incompletedEntries"
-                  @delete="handleDeleteEntry" />
+                  @delete="handleDeleteEntry"
+                  @completeToggle="handleToggleComplete"/>
       </div>
 
       <!-- Completed Tasks Section -->
@@ -15,7 +16,8 @@
         <div class="text-subtitle1">Completed</div>
         <TodoList :categories="categories"
                   :entries="completedEntries"
-                  @delete="handleDeleteEntry" />
+                  @delete="handleDeleteEntry"
+                  @completeToggle="handleToggleComplete"/>
       </div>
     </div>
 
@@ -70,7 +72,6 @@
       }))
 
       categories.value = mappedData
-      console.log(mappedData)
     } catch (err) {
       console.error('Error fetching categories: ', err)
     }
@@ -132,7 +133,7 @@
         console.error(`Error saving data! status: ${response.status}`);
       }
 
-      const createdEntry : EntryApi = await response.json()
+      const createdEntry: EntryApi = await response.json()
 
       // Map API shape to local Entry type
       const mappedData: Entry = {
@@ -156,6 +157,33 @@
     }
   }
 
+  const handleToggleComplete = async (entry: Entry) => {
+    try {
+      const mappedData: EntryApi = {
+        id: entry.id,
+        name: entry.name,
+        isComplete: !entry.completed,
+        categoryId: entry.category
+      }
+      const response = await fetch(`${apiUrl}/api/todos/${entry.id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(mappedData),
+      });
+
+      if (!response.ok) {
+        console.error(`Error updating entry! status: ${response.status}`);
+      }
+
+      entry.completed = !entry.completed
+    } catch (error) {
+      console.error('Error updating resource:', error);
+    }
+
+  }
+
   // update todos to localStorage whenever `entries` changes
   watch(entries, (newEntries: Entry[]) => {
     $q.localStorage.set('todos', newEntries)
@@ -163,3 +191,6 @@
   }, { deep: true })
 
 </script>
+
+
+

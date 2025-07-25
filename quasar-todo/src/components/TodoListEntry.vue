@@ -5,21 +5,20 @@
       <div class="col q-gutter-y-sm">
         <!-- Input task name -->
         <q-input square
-                 dense
                  outlined
                  v-model="form.name"
-                 placeholder="Todo Item" />
+                 label="Todo Item" />
 
         <!-- Input category -->
         <q-select square
-                  dense
                   outlined
                   v-model.number="form.category"
                   :options="categories"
                   option-label="name"
                   option-value="id"
                   emit-value
-                  map-options />
+                  map-options
+                  label="Todo Category"/>
       </div>
 
       <!-- Submit Button -->
