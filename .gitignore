@@ -1,1 +1,6 @@
 .vs/
+**/obj/
+**/bin/
+*.cache.json
+*.AssemblyInfo.cs
+*.AssemblyInfoInputs.cache

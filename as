@@ -1,0 +1,18 @@
+[33m7effc37[m[33m ([m[1;36mHEAD -> [m[1;32mconnect-backend[m[33m)[m delete button linked to backend
+[33m1c9a1d8[m toggle compelte linked to backend
+[33m22313f2[m Todo id gets generated from db
+[33mf60af6e[m categories fetch from db, category dropdown added to form
+[33mf06b325[m Todo page - fetches from database | form adds to database
+[33m63bf74f[m[33m ([m[1;32mbackend[m[33m)[m backend working
+[33mee9f966[m tables and db created using EF Core
+[33m5292977[m[33m ([m[1;32mlocal-storage[m[33m)[m changed variable names
+[33m679a5fd[m[33m ([m[1;31morigin/main[m[33m, [m[1;32mtodo-page[m[33m, [m[1;32mmain[m[33m)[m finish todo page
+[33m780a97f[m delete button added, complete/incomplete button added
+[33mcf01ff8[m entry form component added
+[33m95845e9[m TodoList component added and working
+[33md3de8ee[m navbar added, routing added.
+[33mddd7111[m header and siderbar format
+[33mc65d5da[m Merge branch 'main' of https://github.com/henrikauy/quasar-todo
+[33m40cbd17[m quasar app initialised
+[33m2d9b3cf[m initial commit
+[33mceb1482[m Initial commit
