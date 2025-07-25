@@ -150,13 +150,28 @@
   }
 
   // Handle deletion of an entry by ID
-  const handleDeleteEntry = (entry: Entry) => {
-    const index = entries.value.findIndex(currentEntry => currentEntry.id === entry.id)
-    if (index !== -1) {
-      entries.value.splice(index, 1) // Remove entry from list
+  const handleDeleteEntry = async (entry: Entry) => {
+    try {
+      const response = await fetch(`${apiUrl}/api/Todos/${entry.id}`, {
+        method: 'DELETE',
+      })
+
+      if (!response.ok) {
+        console.error(`Error deleting entry! status: ${response.status}`)
+      }
+
+      // Reflect change on screen
+      const index = entries.value.findIndex(currentEntry => currentEntry.id === entry.id)
+      if (index !== -1) {
+        entries.value.splice(index, 1)
+      }
+    } catch (err) {
+      console.error('Error deleting entry:', err)
     }
+
   }
 
+  // toggle the complete bool
   const handleToggleComplete = async (entry: Entry) => {
     try {
       const mappedData: EntryApi = {
@@ -177,11 +192,11 @@
         console.error(`Error updating entry! status: ${response.status}`);
       }
 
+      // reflect change on screen
       entry.completed = !entry.completed
     } catch (error) {
       console.error('Error updating resource:', error);
     }
-
   }
 
   // update todos to localStorage whenever `entries` changes
