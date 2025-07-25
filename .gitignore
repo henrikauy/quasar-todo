@@ -1,6 +1,25 @@
+# ASP.NET Core
+bin/
+obj/
+*.user
+*.suo
+*.dbmdl
+*.pdb
+*.cache
+*.log
+
+# Visual Studio
 .vs/
-**/obj/
-**/bin/
-*.cache.json
-*.AssemblyInfo.cs
-*.AssemblyInfoInputs.cache
+
+# Auto-generated build metadata
+**/*.AssemblyInfo.*
+**/*.g.cs
+**/*.rpswa.*
+
+
+# Quasar / Frontend
+node_modules/
+dist/
+.quasar/
+.env
+.env.*
