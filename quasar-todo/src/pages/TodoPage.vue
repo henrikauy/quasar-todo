@@ -5,21 +5,24 @@
       <!-- Incomplete Tasks Section -->
       <div class="q-mb-md">
         <div class="text-subtitle1">To Do</div>
-        <TodoList :entries="incompletedEntries"
+        <TodoList :categories="categories"
+                  :entries="incompletedEntries"
                   @delete="handleDeleteEntry" />
       </div>
 
       <!-- Completed Tasks Section -->
       <div class="q-mt-md">
         <div class="text-subtitle1">Completed</div>
-        <TodoList :entries="completedEntries"
+        <TodoList :categories="categories"
+                  :entries="completedEntries"
                   @delete="handleDeleteEntry" />
       </div>
     </div>
 
     <!-- Entry Form -->
     <div class="q-mt-md">
-      <TodoListEntry @add="handleAddEntry" />
+      <TodoListEntry :categories="categories"
+                     @add="handleAddEntry" />
     </div>
   </q-page>
 </template>
@@ -28,16 +31,19 @@
   // Imports
   import { ref, computed, watch, onMounted } from 'vue'
   import TodoList from 'components/TodoList.vue'
-  import type { Entry } from 'components/TodoList.vue'
+  import type { Entry, Category } from 'components/TodoList.vue'
   import TodoListEntry from 'components/TodoListEntry.vue'
   import { useQuasar } from 'quasar'
 
+  // Base API URL from .env
   const apiUrl = import.meta.env.VITE_API_URL;
   const $q = useQuasar()
 
-  // Create entries ref
+  // State variables
   const entries = ref<Entry[]>([])
+  const categories = ref<Category[]>([])
 
+  // Define types for mapping API response
   type EntryApi = {
     id: number;
     name: string;
@@ -45,12 +51,37 @@
     categoryId: number;
   }
 
-  // Populate Entries from API on mount
+  type CategoryApi = {
+    categoryId: number;
+    name: string;
+  }
+
+  // Fetch categories on page mount
+  onMounted(async () => {
+    try {
+      const response = await fetch(`${apiUrl}/api/Categories`)
+      const data = await response.json()
+
+      // Map API shape to local Category type
+      const mappedData: Category[] = data.map((item: CategoryApi) => ({
+        id: item.categoryId,
+        name: item.name
+      }))
+
+      categories.value = mappedData
+      console.log(mappedData)
+    } catch (err) {
+      console.error('Error fetching categories: ', err)
+    }
+  });
+
+  // Fetch todos on page mount
   onMounted(async () => {
     try {
       const response = await fetch(`${apiUrl}/api/Todos`)
       const data = await response.json()
 
+      // Map API shape to local Entry type
       const mappedData: Entry[] = data.map((item: EntryApi) => ({
         id: item.id,
         name: item.name,
@@ -59,34 +90,27 @@
       }))
 
       entries.value = mappedData
-    }
-    catch (err) {
+
+    } catch (err) {
       console.error('Error fetching todos: ', err)
-      const savedEntries = $q.localStorage.getItem<Entry[]>('todos') // Populate entries with whats saved in local storage
+
+      // Load from local storage if fetch fails
+      const savedEntries = $q.localStorage.getItem<Entry[]>('todos')
       if (savedEntries) {
         entries.value = savedEntries
       }
     }
   });
 
-  // Computed list of entries that are not completed
+  // todos not completed
   const incompletedEntries = computed(() =>
     entries.value.filter(entry => !entry.completed)
   )
 
-  // Computed list of entries that are completed
+  // todos that are completed
   const completedEntries = computed(() =>
     entries.value.filter(entry => entry.completed)
   )
-
-  function getCategoryId(category: string): number {
-    switch (category) {
-      case 'chores': return 0;
-      case 'work': return 1;
-      case 'exercise': return 2;
-      default: return 3; // 'misc' or fallback
-    }
-  }
 
   // Handle new entry from form component
   const handleAddEntry = async (newEntry: Entry) => {
@@ -96,11 +120,10 @@
         headers: {
           'Content-Type': 'application/json',
         },
-
         body: JSON.stringify({
           name: newEntry.name,
           isComplete: newEntry.completed,
-          categoryId: getCategoryId(newEntry.category)
+          categoryId: newEntry.category
         })
       })
 
@@ -108,26 +131,24 @@
         console.error(`Error saving data! status: ${response.status}`);
       }
 
-      entries.value.push(newEntry)
+      entries.value.push(newEntry) // Add new entry to local list
     } catch (err) {
       console.error('Error adding entry:', err)
     }
   }
 
-  // Handle entry deletion
+  // Handle deletion of an entry by ID
   const handleDeleteEntry = (entry: Entry) => {
     const index = entries.value.findIndex(currentEntry => currentEntry.id === entry.id)
     if (index !== -1) {
-      entries.value.splice(index, 1)
+      entries.value.splice(index, 1) // Remove entry from list
     }
   }
 
-  // Watch the state of entries - on change update the local storage to current state.
+  // update todos to localStorage whenever `entries` changes
   watch(entries, (newEntries: Entry[]) => {
     $q.localStorage.set('todos', newEntries)
     console.log("local storage updated")
-  },
-    { deep: true }
-  )
+  }, { deep: true })
 
 </script>

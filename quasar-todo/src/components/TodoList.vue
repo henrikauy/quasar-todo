@@ -17,7 +17,7 @@
         <!-- Entry name and category -->
         <q-item-section>
           <q-item-label>{{ entry.name }}</q-item-label>
-          <q-item-label caption lines="2">{{ entry.category }}</q-item-label>
+          <q-item-label caption lines="2">{{ getCategoryName(entry.category) }}</q-item-label>
         </q-item-section>
 
         <!-- Delete button -->
@@ -39,12 +39,21 @@
   export type Entry = {
     id: string;
     name: string;
-    category: 'chores' | 'work' | 'exercise' | 'misc';
+    category: number;
     completed: boolean;
   }
 
-  // Props to pass to parent: list of entries to render
-  defineProps<{ entries: Entry[] }>()
+  // Export Category Type
+  export type Category = {
+    id: number;
+    name: string;
+  }
+
+  // Props to receive to parent
+  const { entries, categories } = defineProps<{
+    entries: Entry[],
+    categories: Category[]
+  }>()
 
   // Define delete emit event
   const emit = defineEmits<{
@@ -59,6 +68,12 @@
   // Toggle completed status
   const toggleComplete = (entry: Entry) => {
     entry.completed = !entry.completed
+  }
+
+  // Get category name from id
+  function getCategoryName(categoryId: number): string {
+    const category = categories.find(c => c.id === categoryId)
+    return category?.name ?? 'Misc'
   }
 
 

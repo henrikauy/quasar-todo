@@ -11,11 +11,15 @@
                  placeholder="Todo Item" />
 
         <!-- Input category -->
-        <q-input square
-                 dense
-                 outlined
-                 v-model="form.category"
-                 placeholder="Category" />
+        <q-select square
+                  dense
+                  outlined
+                  v-model.number="form.category"
+                  :options="categories"
+                  option-label="name"
+                  option-value="id"
+                  emit-value
+                  map-options />
       </div>
 
       <!-- Submit Button -->
@@ -28,38 +32,33 @@
 
 <script setup lang="ts">
   import { ref } from 'vue'
-  import type { Entry } from './TodoList.vue'
+  import type { Entry, Category } from './TodoList.vue'
 
   // Define emit new entry event
   const emit = defineEmits<{ (e: 'add', newEntry: Entry): void }>()
 
   // Form state for new entry
-  const form = ref({
+  const form = ref<{ name: string; category: number | null }>({
     name: '',
-    category: '',
+    category: null,
   })
+
+  // Props to receive from parent
+  defineProps<{ categories: Category[] }>()
 
   // Handle form submission
   const handleSubmit = () => {
     // Return if form is empty
     if (!form.value.name) return
 
-    // Default to misc - temporary. need to add dropdown box.~~~~~~~~~~~~~~~~~~~
-    if (!form.value.category ||
-      (
-        form.value.category !== 'work' &&
-        form.value.category !== 'exercise' &&
-        form.value.category !== 'chores'
-      )
-    ) {
-      form.value.category = 'misc';
-    }
+    // temporary. need to add dropdown box.~~~~~~~~~~~~~~~~~~~
+    if (!form.value.category) return
 
     // Create new Entry object
     const newEntry: Entry = {
       id: `id-${Date.now()}`,
       name: form.value.name,
-      category: form.value.category as Entry['category'],
+      category: form.value.category,
       completed: false
     }
 
@@ -68,6 +67,6 @@
 
     // Reset form
     form.value.name = ''
-    form.value.category = ''
+    form.value.category = null
   }
 </script>
