@@ -32,10 +32,10 @@
 
 <script setup lang="ts">
   import { ref } from 'vue'
-  import type { Entry, Category } from './TodoList.vue'
+  import type { Category } from './TodoList.vue'
 
   // Define emit new entry event
-  const emit = defineEmits<{ (e: 'add', newEntry: Entry): void }>()
+  const emit = defineEmits<{ (e: 'add', newEntry: NewEntry): void }>()
 
   // Form state for new entry
   const form = ref<{ name: string; category: number | null }>({
@@ -46,6 +46,12 @@
   // Props to receive from parent
   defineProps<{ categories: Category[] }>()
 
+  export type NewEntry = {
+    name: string;
+    category: number;
+    completed: boolean;
+  }
+
   // Handle form submission
   const handleSubmit = () => {
     // Return if form is empty
@@ -55,8 +61,7 @@
     if (!form.value.category) return
 
     // Create new Entry object
-    const newEntry: Entry = {
-      id: `id-${Date.now()}`,
+    const newEntry: NewEntry = {
       name: form.value.name,
       category: form.value.category,
       completed: false

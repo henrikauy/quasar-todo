@@ -32,6 +32,7 @@
   import { ref, computed, watch, onMounted } from 'vue'
   import TodoList from 'components/TodoList.vue'
   import type { Entry, Category } from 'components/TodoList.vue'
+  import type { NewEntry } from 'components/TodoListEntry.vue'
   import TodoListEntry from 'components/TodoListEntry.vue'
   import { useQuasar } from 'quasar'
 
@@ -113,7 +114,7 @@
   )
 
   // Handle new entry from form component
-  const handleAddEntry = async (newEntry: Entry) => {
+  const handleAddEntry = async (newEntry: NewEntry) => {
     try {
       const response = await fetch(`${apiUrl}/api/Todos`, {
         method: 'POST',
@@ -131,7 +132,17 @@
         console.error(`Error saving data! status: ${response.status}`);
       }
 
-      entries.value.push(newEntry) // Add new entry to local list
+      const createdEntry : EntryApi = await response.json()
+
+      // Map API shape to local Entry type
+      const mappedData: Entry = {
+        id: createdEntry.id,
+        name: createdEntry.name,
+        completed: createdEntry.isComplete,
+        category: createdEntry.categoryId
+      };
+
+      entries.value.push(mappedData) // Add new entry to local list
     } catch (err) {
       console.error('Error adding entry:', err)
     }

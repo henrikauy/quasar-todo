@@ -37,7 +37,7 @@
 <script setup lang="ts">
   // Export Entry type
   export type Entry = {
-    id: string;
+    id: number;
     name: string;
     category: number;
     completed: boolean;
